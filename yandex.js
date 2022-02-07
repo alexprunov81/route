@@ -11,7 +11,7 @@ const addRoute = myMap => {
             suggest2.value]
     ).then(function (router) {
         const length = Math.round(router.getLength())
-        setLength.innerHTML = `Растояние ${length}м`
+        setLength.innerHTML = `Растояние ${length/1000} км`
         mapWrap.append(setLength)
         myMap.geoObjects.add(router)
     })
