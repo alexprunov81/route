@@ -33,7 +33,8 @@ function init() {
                 params: {results: 2}
             },
             {
-                boundsAutoApply: true
+                boundsAutoApply: true,
+                zoomMargin: 30
             }
         )
         myMap.geoObjects.add(multiRoute)
