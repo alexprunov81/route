@@ -74,10 +74,10 @@ function init() {
         myMap.geoObjects.removeAll(multiRoute)
         myMap.geoObjects.add(multiRoute)
 
-        clearthemap(myMap)
+        
         addRoute(myMap)
     })
-
+clearthemap(myMap)
 
 }
 
