@@ -3,8 +3,10 @@ const setDistance = document.createElement('span')
 const setTime = document.createElement('span')
 const suggest1 = document.getElementById('suggest1')
 const suggest2 = document.getElementById('suggest2')
+const url = 'http://localhost:3000/posts'
 
-function clearthemap(myMap) {
+
+function clearTheMap(myMap) {
     myMap.controls.remove('geolocationControl')
     myMap.controls.remove('searchControl')
     myMap.controls.remove('trafficControl')
@@ -26,30 +28,40 @@ function init() {
         zoom: 7,
     })
 
-    const addRoute = myMap => {
-
+    const addRoute = () => {
         ymaps.route(
             [
                 suggest1.value,
                 suggest2.value
             ]
         ).then(function (router) {
-            const length = Math.round(router.getLength())
+            const length = Math.trunc(Math.round(router.getLength()) / 1000)
             const time = Math.trunc(router.getJamsTime())
-
             const hours = Math.trunc(time / 3600)
             const minutes = Math.trunc((time - hours * 3600) / 60)
 
-            console.log(hours)
-            console.log(minutes)
+            const body =
+                {
+                    "item A": suggest1.value,
+                    "item B": suggest2.value,
+                    "distance": length,
+                    "hours": hours,
+                    "minutes": minutes
+                }
 
-            setDistance.innerHTML = `Растояние ${Math.trunc(length / 1000)} км`
+            setDistance.innerHTML = `Растояние ${length} км`
             setDistance.classList.add('distance')
             mapWrap.append(setDistance)
 
             setTime.innerHTML = `${hours ? hours + ' ч' : ''} ${minutes ? minutes + ' мин' : ''}`
             setTime.classList.add('time')
             mapWrap.append(setTime)
+
+            return fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {'Content-Type': 'application/json'}
+            })
         })
     }
 
@@ -74,11 +86,12 @@ function init() {
         myMap.geoObjects.removeAll(multiRoute)
         myMap.geoObjects.add(multiRoute)
 
-        
-        addRoute(myMap)
-    })
-clearthemap(myMap)
+        addRoute()
 
+    })
+    clearTheMap(myMap)
 }
 
 ymaps.ready(init)
+
+
